@@ -1,33 +1,52 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
+using Photon.Realtime;
+using UnityEngine.UI;
 
-public class PlayerMove : MonoBehaviour
+public class PlayerMove : MonoBehaviourPunCallbacks, IPunObservable
 {
-    [SerializeField]
-    private float moveSpeed;
+    
+    public float moveSpeed;
 
-    [SerializeField]
-    private float sensitivity;
+    public float sensitivity;
 
-    [SerializeField]
-    private float cameraRotationLimit;
-    private float currentCameraRotationX;
+    public float cameraRotationLimit;
+    public float currentCameraRotationX;
 
-    [SerializeField]
-    private Camera mainCamera;
-    private Rigidbody rigidbody;
+    public Camera mainCamera;
+    public Rigidbody rigidbody;
+
+    public Text NickNameText;
+    public PhotonView PV;
+    public GameObject GO;
+
+    void Awake()
+    {
+        NickNameText.text = PV.IsMine ? PhotonNetwork.NickName : PV.Owner.NickName;
+        NickNameText.color = PV.IsMine ? Color.green : Color.red;
+    }
 
     private void Start()
     {
         rigidbody = GetComponent<Rigidbody>();
     }
 
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
+
+    }
+
     private void Update()
     {
-        Move();
-        CameraRotation();
-        CharacterRoatation();
+        if(PV.IsMine)
+        {
+            Move();
+            CameraRotation();
+            CharacterRoatation();
+        }
+        
     }
 
     private void Move()
@@ -42,6 +61,7 @@ public class PlayerMove : MonoBehaviour
         rigidbody.MovePosition(transform.position + velocity * Time.deltaTime);
     }
 
+    [PunRPC]
     private void CameraRotation()
     {
         float xRotation = Input.GetAxisRaw("Mouse Y");
@@ -59,4 +79,6 @@ public class PlayerMove : MonoBehaviour
         Vector3 characterRoationY = new Vector3(0f, yRotation, 0f) * sensitivity;
         rigidbody.MoveRotation(rigidbody.rotation * Quaternion.Euler(characterRoationY));
     }
+
+    
 }
