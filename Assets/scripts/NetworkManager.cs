@@ -43,7 +43,8 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     public void Spawn()
     {
-        PhotonNetwork.Instantiate("Player", Vector3.zero, Quaternion.identity);
+        PhotonNetwork.Instantiate("Player", Player.transform.position, Quaternion.identity);
+
     }
 
     public override void OnDisconnected(DisconnectCause cause)

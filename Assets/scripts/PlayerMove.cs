@@ -40,45 +40,84 @@ public class PlayerMove : MonoBehaviourPunCallbacks, IPunObservable
 
     private void Update()
     {
-        if(PV.IsMine)
-        {
-            Move();
-            CameraRotation();
-            CharacterRoatation();
-        }
-        
+        Move();
+        CameraRotation();
+        CharacterRoatation();
+
     }
 
     private void Move()
     {
-        float moveDirX = Input.GetAxisRaw("Horizontal");
-        float moveDirZ = Input.GetAxisRaw("Vertical");
-        Vector3 moveHorizontal = transform.right * moveDirX;
-        Vector3 moveVertical = transform.forward * moveDirZ;
+        if(PV.IsMine)
+        {
+            float moveDirX = Input.GetAxisRaw("Horizontal");
+            float moveDirZ = Input.GetAxisRaw("Vertical");
+            Vector3 moveHorizontal = transform.right * moveDirX;
+            Vector3 moveVertical = transform.forward * moveDirZ;
 
-        Vector3 velocity = (moveHorizontal + moveVertical).normalized * moveSpeed;
+            Vector3 velocity = (moveHorizontal + moveVertical).normalized * moveSpeed;
 
-        rigidbody.MovePosition(transform.position + velocity * Time.deltaTime);
+            //rigidbody.MovePosition(transform.position + velocity * Time.deltaTime);
+
+            PV.RPC("MoveRPC", RpcTarget.AllBuffered, velocity);
+        }
     }
 
     [PunRPC]
+    private void MoveRPC(Vector3 velocity)
+    {
+        if(!PV.IsMine)
+        {
+            rigidbody.MovePosition(transform.position + velocity * Time.deltaTime);
+        }
+    }
+
     private void CameraRotation()
     {
-        float xRotation = Input.GetAxisRaw("Mouse Y");
-        float cameraRotationX = xRotation * sensitivity;
+        if(PV.IsMine)
+        {
+            float xRotation = Input.GetAxisRaw("Mouse Y");
+            float cameraRotationX = xRotation * sensitivity;
 
-        currentCameraRotationX -= cameraRotationX;
-        currentCameraRotationX = Mathf.Clamp(currentCameraRotationX, -cameraRotationLimit, cameraRotationLimit);
+            currentCameraRotationX -= cameraRotationX;
+            currentCameraRotationX = Mathf.Clamp(currentCameraRotationX, -cameraRotationLimit, cameraRotationLimit);
 
-        mainCamera.transform.localEulerAngles = new Vector3(currentCameraRotationX, 0f, 0f);
+            //mainCamera.transform.localEulerAngles = new Vector3(currentCameraRotationX, 0f, 0f);
+
+            PV.RPC("CameraRotationRPC", RpcTarget.All, currentCameraRotationX);
+        }
+        
+    }
+
+    [PunRPC]
+    private void CameraRotationRPC(float rotationX)
+    {
+        if(!PV.IsMine)
+        {
+            mainCamera.transform.localEulerAngles = new Vector3(currentCameraRotationX, 0f, 0f);
+        }
     }
 
     private void CharacterRoatation()
     {
-        float yRotation = Input.GetAxisRaw("Mouse X");
-        Vector3 characterRoationY = new Vector3(0f, yRotation, 0f) * sensitivity;
-        rigidbody.MoveRotation(rigidbody.rotation * Quaternion.Euler(characterRoationY));
+        if(PV.IsMine)
+        {
+            float yRotation = Input.GetAxisRaw("Mouse X");
+            Vector3 characterRoationY = new Vector3(0f, yRotation, 0f) * sensitivity;
+            //rigidbody.MoveRotation(rigidbody.rotation * Quaternion.Euler(characterRoationY));
+
+            PV.RPC("CharacterRotationRPC", RpcTarget.AllBuffered, characterRoationY);
+        }
+        
     }
 
+    [PunRPC]
+    private void CharacterRotationRPC(Vector3 rotationY)
+    {
+        if(!PV.IsMine)
+        {
+            rigidbody.MoveRotation(rigidbody.rotation * Quaternion.Euler(rotationY));
+        }
+    }
     
 }

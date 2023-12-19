@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 5710161437612601879}
   - component: {fileID: 9090217949995685115}
   - component: {fileID: 8887554124677030612}
-  - component: {fileID: 1299700638234120430}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -93,27 +92,6 @@ AudioListener:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3663111819967196498}
   m_Enabled: 1
---- !u!114 &1299700638234120430
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3663111819967196498}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d715c811688d5744a87c36e5331f0d6b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  moveSpeed: 4
-  sensitivity: 0
-  cameraRotationLimit: 0
-  currentCameraRotationX: 0
-  mainCamera: {fileID: 0}
-  rigidbody: {fileID: 0}
-  NickNameText: {fileID: 0}
-  PV: {fileID: 0}
-  GO: {fileID: 0}
 --- !u!1 &7217809446892517664
 GameObject:
   m_ObjectHideFlags: 0
@@ -373,7 +351,7 @@ MonoBehaviour:
   cameraRotationLimit: 45
   currentCameraRotationX: 0
   mainCamera: {fileID: 9090217949995685115}
-  rigidbody: {fileID: 0}
+  rigidbody: {fileID: 5137955004127265734}
   NickNameText: {fileID: 6512831566284642070}
   PV: {fileID: 3652249142140202206}
   GO: {fileID: 8362320938957955226}
@@ -398,7 +376,6 @@ MonoBehaviour:
   ObservedComponents:
   - {fileID: 3050780397500511117}
   - {fileID: 1356036067796115474}
-  - {fileID: 1299700638234120430}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
