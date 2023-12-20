@@ -48,18 +48,20 @@ public class PlayerMove : MonoBehaviourPunCallbacks, IPunObservable
 
     private void Move()
     {
-        if(PV.IsMine)
+        float moveDirX = Input.GetAxisRaw("Horizontal");
+        float moveDirZ = Input.GetAxisRaw("Vertical");
+        Vector3 moveHorizontal = transform.right * moveDirX;
+        Vector3 moveVertical = transform.forward * moveDirZ;
+
+        Vector3 velocity = (moveHorizontal + moveVertical).normalized * moveSpeed;
+
+        //rigidbody.MovePosition(transform.position + velocity * Time.deltaTime);
+
+        PV.RPC("MoveRPC", RpcTarget.AllBuffered, velocity);
+
+        if (PV.IsMine)
         {
-            float moveDirX = Input.GetAxisRaw("Horizontal");
-            float moveDirZ = Input.GetAxisRaw("Vertical");
-            Vector3 moveHorizontal = transform.right * moveDirX;
-            Vector3 moveVertical = transform.forward * moveDirZ;
-
-            Vector3 velocity = (moveHorizontal + moveVertical).normalized * moveSpeed;
-
-            //rigidbody.MovePosition(transform.position + velocity * Time.deltaTime);
-
-            PV.RPC("MoveRPC", RpcTarget.AllBuffered, velocity);
+            
         }
     }
 
@@ -74,17 +76,19 @@ public class PlayerMove : MonoBehaviourPunCallbacks, IPunObservable
 
     private void CameraRotation()
     {
-        if(PV.IsMine)
+        float xRotation = Input.GetAxisRaw("Mouse Y");
+        float cameraRotationX = xRotation * sensitivity;
+
+        currentCameraRotationX -= cameraRotationX;
+        currentCameraRotationX = Mathf.Clamp(currentCameraRotationX, -cameraRotationLimit, cameraRotationLimit);
+
+        //mainCamera.transform.localEulerAngles = new Vector3(currentCameraRotationX, 0f, 0f);
+
+        PV.RPC("CameraRotationRPC", RpcTarget.All, currentCameraRotationX);
+
+        if (PV.IsMine)
         {
-            float xRotation = Input.GetAxisRaw("Mouse Y");
-            float cameraRotationX = xRotation * sensitivity;
-
-            currentCameraRotationX -= cameraRotationX;
-            currentCameraRotationX = Mathf.Clamp(currentCameraRotationX, -cameraRotationLimit, cameraRotationLimit);
-
-            //mainCamera.transform.localEulerAngles = new Vector3(currentCameraRotationX, 0f, 0f);
-
-            PV.RPC("CameraRotationRPC", RpcTarget.All, currentCameraRotationX);
+            
         }
         
     }
@@ -100,13 +104,15 @@ public class PlayerMove : MonoBehaviourPunCallbacks, IPunObservable
 
     private void CharacterRoatation()
     {
-        if(PV.IsMine)
-        {
-            float yRotation = Input.GetAxisRaw("Mouse X");
-            Vector3 characterRoationY = new Vector3(0f, yRotation, 0f) * sensitivity;
-            //rigidbody.MoveRotation(rigidbody.rotation * Quaternion.Euler(characterRoationY));
+        float yRotation = Input.GetAxisRaw("Mouse X");
+        Vector3 characterRoationY = new Vector3(0f, yRotation, 0f) * sensitivity;
+        //rigidbody.MoveRotation(rigidbody.rotation * Quaternion.Euler(characterRoationY));
 
-            PV.RPC("CharacterRotationRPC", RpcTarget.AllBuffered, characterRoationY);
+        PV.RPC("CharacterRotationRPC", RpcTarget.AllBuffered, characterRoationY);
+
+        if (PV.IsMine)
+        {
+            
         }
         
     }
