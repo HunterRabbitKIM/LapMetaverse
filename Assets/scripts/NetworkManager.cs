@@ -9,6 +9,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 {
     public InputField NickNameInput;
     public GameObject DisconnectPanel;
+    public GameObject SpawnPoint;
 
     private void Awake()
     {
@@ -41,7 +42,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     public void Spawn()
     {
-        PhotonNetwork.Instantiate("Player", Vector3.zero, Quaternion.identity);
+        PhotonNetwork.Instantiate("Player", SpawnPoint.transform.position, Quaternion.identity);
 
     }
 
