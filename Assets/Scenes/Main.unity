@@ -3801,7 +3801,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NickNameInput: {fileID: 2013966849}
   DisconnectPanel: {fileID: 1881555691}
-  SpawnPoint: {fileID: 0}
+  SpawnPoint: {fileID: 756824125584977044}
 --- !u!4 &2138908696
 Transform:
   m_ObjectHideFlags: 0
