@@ -3801,6 +3801,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NickNameInput: {fileID: 2013966849}
   DisconnectPanel: {fileID: 1881555691}
+  SpawnPoint: {fileID: 0}
 --- !u!4 &2138908696
 Transform:
   m_ObjectHideFlags: 0
@@ -3962,7 +3963,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!1001 &2369780075500162083
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4187,7 +4188,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &5969495486031915128
 Transform:
   m_ObjectHideFlags: 0
