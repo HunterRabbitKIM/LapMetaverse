@@ -76,7 +76,7 @@ public class PlayerMove : MonoBehaviourPunCallbacks, IPunObservable
 
     private void CameraRotation()
     {
-        if (PV.IsMine == false)
+        if (PV.IsMine)
         {
             float xRotation = Input.GetAxisRaw("Mouse Y");
             float cameraRotationX = xRotation * sensitivity;
