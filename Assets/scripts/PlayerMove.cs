@@ -33,6 +33,10 @@ public class PlayerMove : MonoBehaviourPunCallbacks, IPunObservable
     private void Start()
     {
         rigidbody = GetComponent<Rigidbody>();
+        if(PV.IsMine == true)
+        {
+            mainCamera.gameObject.SetActive(true);
+        }
     }
 
     
@@ -45,8 +49,6 @@ public class PlayerMove : MonoBehaviourPunCallbacks, IPunObservable
             CameraRotation();
             CharacterRoatation();
         }
-        
-
     }
 
     private void Move()
@@ -74,7 +76,7 @@ public class PlayerMove : MonoBehaviourPunCallbacks, IPunObservable
 
     private void CameraRotation()
     {
-        if (PV.IsMine)
+        if (PV.IsMine == false)
         {
             float xRotation = Input.GetAxisRaw("Mouse Y");
             float cameraRotationX = xRotation * sensitivity;
