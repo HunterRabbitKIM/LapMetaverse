@@ -5,20 +5,19 @@ using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine.UI;
 
-public class PlayerMove : MonoBehaviourPunCallbacks, IPunObservable
+public class PlayerMove : MonoBehaviourPunCallbacks
 {
     
-    public float moveSpeed;
-
-    public float sensitivity;
-
-    public float cameraRotationLimit;
+    public float moveSpeed; // 움직임
+    public float sensitivity; // 감도(마우스)
+    public float cameraRotationLimit; // 카메라 회전
     public float currentCameraRotationX;
 
-    public Camera mainCamera;
-    public Rigidbody rigidbody;
+    public Camera mainCamera; // 메인 카메라
+    public Rigidbody rigidbody; // 움직임
 
-    public Text NickNameText;
+    public Text NickNameText; // 닉네임
+
     public PhotonView PV;
     public GameObject GO;
 
@@ -36,6 +35,16 @@ public class PlayerMove : MonoBehaviourPunCallbacks, IPunObservable
         if(PV.IsMine == true)
         {
             mainCamera.gameObject.SetActive(true);
+
+            // PhotonTransformView 컴포넌트를 추가합니다.
+            PhotonTransformView photonTransformView = gameObject.AddComponent<PhotonTransformView>();
+            photonTransformView.m_SynchronizePosition = true;
+            photonTransformView.m_SynchronizeRotation = true;
+        }
+        else
+        {
+            Destroy(mainCamera);
+            Destroy(GetComponent<PlayerMove>());
         }
     }
 
@@ -62,17 +71,19 @@ public class PlayerMove : MonoBehaviourPunCallbacks, IPunObservable
 
             Vector3 velocity = (moveHorizontal + moveVertical).normalized * moveSpeed;
 
-            //rigidbody.MovePosition(transform.position + velocity * Time.deltaTime);
+            rigidbody.MovePosition(transform.position + velocity * Time.deltaTime);
 
-            PV.RPC("MoveRPC", RpcTarget.AllBuffered, velocity);
+            //PV.RPC("MoveRPC", RpcTarget.AllBuffered, velocity);
         }
     }
 
+    /*
     [PunRPC]
     private void MoveRPC(Vector3 velocity)
     {
         rigidbody.MovePosition(transform.position + velocity * Time.deltaTime);
     }
+    */
 
     private void CameraRotation()
     {
@@ -84,18 +95,20 @@ public class PlayerMove : MonoBehaviourPunCallbacks, IPunObservable
             currentCameraRotationX -= cameraRotationX;
             currentCameraRotationX = Mathf.Clamp(currentCameraRotationX, -cameraRotationLimit, cameraRotationLimit);
 
-            //mainCamera.transform.localEulerAngles = new Vector3(currentCameraRotationX, 0f, 0f);
+            mainCamera.transform.localEulerAngles = new Vector3(currentCameraRotationX, 0f, 0f);
 
-            PV.RPC("CameraRotationRPC", RpcTarget.AllBuffered, currentCameraRotationX);
+            //PV.RPC("CameraRotationRPC", RpcTarget.AllBuffered, currentCameraRotationX);
         }
         
     }
 
+    /*
     [PunRPC]
     private void CameraRotationRPC(float rotationX)
     {
         mainCamera.transform.localEulerAngles = new Vector3(currentCameraRotationX, 0f, 0f);
     }
+    */
 
     private void CharacterRoatation()
     {
@@ -103,19 +116,23 @@ public class PlayerMove : MonoBehaviourPunCallbacks, IPunObservable
         {
             float yRotation = Input.GetAxisRaw("Mouse X");
             Vector3 characterRoationY = new Vector3(0f, yRotation, 0f) * sensitivity;
-            //rigidbody.MoveRotation(rigidbody.rotation * Quaternion.Euler(characterRoationY));
+            
+            rigidbody.MoveRotation(rigidbody.rotation * Quaternion.Euler(characterRoationY));
 
-            PV.RPC("CharacterRotationRPC", RpcTarget.AllBuffered, characterRoationY);
+            //PV.RPC("CharacterRotationRPC", RpcTarget.AllBuffered, characterRoationY);
         }
         
     }
 
+    /*
     [PunRPC]
     private void CharacterRotationRPC(Vector3 rotationY)
     {
         rigidbody.MoveRotation(rigidbody.rotation * Quaternion.Euler(rotationY));
     }
+    */
 
+    /*
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
         if (stream.IsWriting)
@@ -127,5 +144,6 @@ public class PlayerMove : MonoBehaviourPunCallbacks, IPunObservable
             curPos = (Vector3)stream.ReceiveNext();
         }
     }
+    */
 
 }
