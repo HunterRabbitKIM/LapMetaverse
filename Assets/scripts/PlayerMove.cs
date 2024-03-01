@@ -5,7 +5,7 @@ using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine.UI;
 
-public class PlayerMove : MonoBehaviourPunCallbacks
+public class PlayerMove : MonoBehaviourPunCallbacks, IPunObservable
 {
     
     public float moveSpeed; // 움직임
@@ -31,21 +31,26 @@ public class PlayerMove : MonoBehaviourPunCallbacks
 
     private void Start()
     {
+        PV = GetComponent<PhotonView>();
         rigidbody = GetComponent<Rigidbody>();
         if(PV.IsMine == true)
         {
             mainCamera.gameObject.SetActive(true);
 
+            /*
             // PhotonTransformView 컴포넌트를 추가합니다.
             PhotonTransformView photonTransformView = gameObject.AddComponent<PhotonTransformView>();
             photonTransformView.m_SynchronizePosition = true;
             photonTransformView.m_SynchronizeRotation = true;
+            */
         }
+        /*
         else
         {
             Destroy(mainCamera);
             Destroy(GetComponent<PlayerMove>());
         }
+        */
     }
 
     
@@ -71,19 +76,19 @@ public class PlayerMove : MonoBehaviourPunCallbacks
 
             Vector3 velocity = (moveHorizontal + moveVertical).normalized * moveSpeed;
 
-            rigidbody.MovePosition(transform.position + velocity * Time.deltaTime);
+            //rigidbody.MovePosition(transform.position + velocity * Time.deltaTime);
 
-            //PV.RPC("MoveRPC", RpcTarget.AllBuffered, velocity);
+            PV.RPC("MoveRPC", RpcTarget.AllBuffered, velocity);
         }
     }
 
-    /*
+    
     [PunRPC]
     private void MoveRPC(Vector3 velocity)
     {
         rigidbody.MovePosition(transform.position + velocity * Time.deltaTime);
     }
-    */
+    
 
     private void CameraRotation()
     {
@@ -95,20 +100,20 @@ public class PlayerMove : MonoBehaviourPunCallbacks
             currentCameraRotationX -= cameraRotationX;
             currentCameraRotationX = Mathf.Clamp(currentCameraRotationX, -cameraRotationLimit, cameraRotationLimit);
 
-            mainCamera.transform.localEulerAngles = new Vector3(currentCameraRotationX, 0f, 0f);
+            //mainCamera.transform.localEulerAngles = new Vector3(currentCameraRotationX, 0f, 0f);
 
-            //PV.RPC("CameraRotationRPC", RpcTarget.AllBuffered, currentCameraRotationX);
+            PV.RPC("CameraRotationRPC", RpcTarget.AllBuffered, currentCameraRotationX);
         }
         
     }
 
-    /*
+    
     [PunRPC]
     private void CameraRotationRPC(float rotationX)
     {
         mainCamera.transform.localEulerAngles = new Vector3(currentCameraRotationX, 0f, 0f);
     }
-    */
+    
 
     private void CharacterRoatation()
     {
@@ -119,20 +124,20 @@ public class PlayerMove : MonoBehaviourPunCallbacks
             
             rigidbody.MoveRotation(rigidbody.rotation * Quaternion.Euler(characterRoationY));
 
-            //PV.RPC("CharacterRotationRPC", RpcTarget.AllBuffered, characterRoationY);
+            PV.RPC("CharacterRotationRPC", RpcTarget.AllBuffered, characterRoationY);
         }
         
     }
 
-    /*
+    
     [PunRPC]
     private void CharacterRotationRPC(Vector3 rotationY)
     {
         rigidbody.MoveRotation(rigidbody.rotation * Quaternion.Euler(rotationY));
     }
-    */
+    
 
-    /*
+    
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
         if (stream.IsWriting)
@@ -144,6 +149,6 @@ public class PlayerMove : MonoBehaviourPunCallbacks
             curPos = (Vector3)stream.ReceiveNext();
         }
     }
-    */
+    
 
 }
