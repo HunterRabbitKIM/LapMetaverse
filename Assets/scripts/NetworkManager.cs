@@ -22,7 +22,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     public override void OnConnectedToMaster()
     {
-        PhotonNetwork.LocalPlayer.NickName = NickNameInput.text;
+        //PhotonNetwork.LocalPlayer.NickName = NickNameInput.text;
         PhotonNetwork.JoinOrCreateRoom("Room", new RoomOptions { MaxPlayers = 14 }, null);
     }
 
